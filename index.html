@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trilha IA • Tayna — Do Zero ao Intermediário</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-sage: #E8EFE9;
+      --shell-bg: #F6F9F6;
+      --card-bg: #FFFFFF;
+      --forest-900: #163026;
+      --forest-800: #1F4033;
+      --forest-700: #2A5443;
+      --mint-500: #52B788;
+      --mint-400: #74C69D;
+      --mint-100: #E3F3EA;
+      --coral-500: #F29368;
+      --coral-600: #E57F52;
+      --coral-100: #FDECE4;
+      --text-main: #14261E;
+      --text-muted: #5F736A;
+      --border-soft: #E2EBE4;
+      --shadow-card: 0 10px 30px -10px rgba(22, 48, 38, 0.08);
+      --shadow-shell: 0 24px 60px -15px rgba(22, 48, 38, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-sage);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 20px;
+      line-height: 1.5;
+    }
+
+    .serif-accent {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+    }
+
+    /* Main App Shell */
+    .app-shell {
+      max-width: 1380px;
+      margin: 0 auto;
+      background: var(--shell-bg);
+      border-radius: 32px;
+      padding: 18px;
+      box-shadow: var(--shadow-shell);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 22px;
+      min-height: calc(100vh - 40px);
+    }
+
+    /* Dark Forest Left Rail */
+    .side-rail {
+      background: var(--forest-900);
+      border-radius: 26px;
+      padding: 20px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      color: #FFFFFF;
+      position: sticky;
+      top: 20px;
+      height: calc(100vh - 76px);
+      max-height: 860px;
+    }
+
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--mint-400);
+      letter-spacing: -0.04em;
+    }
+
+    .nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .nav-btn {
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.62);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .nav-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+    }
+
+    .nav-btn.active {
+      background: var(--mint-500);
+      color: var(--forest-900);
+      box-shadow: 0 8px 20px rgba(82, 183, 136, 0.35);
+    }
+
+    .nav-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke-width: 2;
+    }
+
+    .nav-tooltip {
+      position: absolute;
+      left: 60px;
+      background: var(--forest-900);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 10px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-6px);
+      transition: all 0.18s ease;
+      z-index: 50;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+    }
+
+    .nav-btn:hover .nav-tooltip {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Main Content Area */
+    .main-area {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-right: 4px;
+    }
+
+    /* Top Bento Row: Hero Banner + Weekly Calendar */
+    .top-row {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 20px;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, var(--forest-900) 0%, var(--forest-800) 100%);
+      border-radius: 26px;
+      padding: 26px 30px;
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-card);
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(82, 183, 136, 0.22) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .hero-title {
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title .serif-accent {
+      font-size: 34px;
+      color: var(--mint-400);
+    }
+
+    .hero-sub {
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, 0.78);
+      margin-top: 8px;
+      max-width: 480px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 13px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-pill.pending {
+      background: rgba(242, 147, 104, 0.18);
+      color: #FFB694;
+      border: 1px solid rgba(242, 147, 104, 0.4);
+    }
+
+    .status-pill.approved {
+      background: rgba(82, 183, 136, 0.2);
+      color: #8CE0B5;
+      border: 1px solid rgba(82, 183, 136, 0.4);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.85); }
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .btn-coral {
+      background: var(--coral-500);
+      color: var(--forest-900);
+      border: none;
+      border-radius: 999px;
+      padding: 11px 20px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 8px 20px rgba(242, 147, 104, 0.3);
+    }
+
+    .btn-coral:hover {
+      background: var(--coral-600);
+      transform: translateY(-1px);
+    }
+
+    .btn-mint {
+      background: var(--mint-500);
+      color: var(--forest-900);
+      border: none;
+      border-radius: 999px;
+      padding: 11px 20px;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-mint:hover {
+      background: var(--mint-400);
+      transform: translateY(-1px);
+    }
+
+    .hero-meta-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .mini-chip {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    /* Calendar Card */
+    .calendar-card {
+      background: var(--card-bg);
+      border-radius: 26px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .cal-title {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .cal-nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    .icon-circle-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border-soft);
+      background: var(--shell-bg);
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      transition: all 0.15s ease;
+    }
+
+    .icon-circle-btn:hover {
+      background: var(--forest-900);
+      color: #fff;
+    }
+
+    .week-strip {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .day-pill {
+      border-radius: 16px;
+      padding: 10px 6px;
+      text-align: center;
+      background: var(--shell-bg);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .day-pill .d-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .day-pill .d-num {
+      font-size: 16px;
+      font-weight: 800;
+      margin-top: 4px;
+      color: var(--text-main);
+    }
+
+    .day-pill .d-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin: 5px auto 0;
+      background: #CBD8CE;
+    }
+
+    .day-pill.done .d-dot {
+      background: var(--mint-500);
+    }
+
+    .day-pill.active {
+      background: var(--forest-900);
+      color: #FFFFFF;
+      box-shadow: 0 8px 18px rgba(22, 48, 38, 0.22);
+    }
+
+    .day-pill.active .d-name {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .day-pill.active .d-num {
+      color: #FFFFFF;
+    }
+
+    /* Middle Bento Row: 3 Cards */
+    .mid-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 20px;
+    }
+
+    .bento-card {
+      background: var(--card-bg);
+      border-radius: 26px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-mint {
+      background: var(--mint-100);
+      color: var(--forest-800);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+
+    /* Squad / People Card */
+    .squad-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .person-box {
+      background: var(--shell-bg);
+      border-radius: 18px;
+      padding: 14px 12px;
+      text-align: center;
+      border: 1px solid var(--border-soft);
+    }
+
+    .avatar-circle {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin: 0 auto 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .avatar-tayna {
+      background: linear-gradient(135deg, #FDECE4, #F7C5AE);
+      color: #8A3B18;
+    }
+
+    .avatar-mentor {
+      background: linear-gradient(135deg, #D8F3DC, #95D5B2);
+      color: #163026;
+    }
+
+    .person-name {
+      font-size: 13.5px;
+      font-weight: 700;
+    }
+
+    .person-role {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Big Metric Card (Hours) */
+    .big-metric {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--forest-900);
+      line-height: 1.05;
+      margin: 6px 0;
+    }
+
+    .big-metric span {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .metric-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-muted);
+      padding-top: 10px;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .metric-footer strong {
+      color: var(--forest-900);
+      display: block;
+      font-size: 13px;
+    }
+
+    /* Pillars Capsule Chart */
+    .pillars-chart {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      align-items: end;
+      height: 115px;
+      padding-top: 8px;
+    }
+
+    .pillar-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      height: 100%;
+    }
+
+    .pillar-track {
+      width: 34px;
+      flex: 1;
+      background: var(--shell-bg);
+      border-radius: 999px;
+      padding: 3px;
+      display: flex;
+      align-items: flex-end;
+      border: 1px solid var(--border-soft);
+    }
+
+    .pillar-fill {
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--mint-500) 0%, var(--forest-900) 100%);
+      transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      min-height: 14%;
+    }
+
+    .pillar-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    /* Bottom Layout: Statistics + Curriculum Workspace */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* Segmented 30-Tick Statistics Card */
+    .stats-number {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--forest-900);
+      letter-spacing: -0.03em;
+    }
+
+    .stats-number small {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-left: 6px;
+      letter-spacing: 0;
+    }
+
+    .tick-bar {
+      display: grid;
+      grid-template-columns: repeat(30, 1fr);
+      gap: 3px;
+      margin: 14px 0 18px;
+      height: 22px;
+    }
+
+    .tick {
+      border-radius: 4px;
+      background: #DCE6DE;
+      transition: background 0.25s ease, transform 0.2s ease;
+    }
+
+    .tick.filled {
+      background: var(--mint-500);
+    }
+
+    .sub-stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .sub-stat-box {
+      background: var(--shell-bg);
+      border-radius: 18px;
+      padding: 16px 12px;
+      text-align: center;
+      border: 1px solid var(--border-soft);
+    }
+
+    .sub-stat-val {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--forest-900);
+      margin-top: 6px;
+    }
+
+    .sub-stat-lbl {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Curriculum Workspace */
+    .workspace-card {
+      background: var(--card-bg);
+      border-radius: 26px;
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border-soft);
+    }
+
+    .week-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .week-tab {
+      padding: 9px 15px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--shell-bg);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .week-tab.active {
+      background: var(--forest-900);
+      color: #FFFFFF;
+      border-color: var(--forest-900);
+    }
+
+    .week-tab.locked {
+      opacity: 0.65;
+    }
+
+    /* Lock Banner */
+    .lock-banner {
+      background: linear-gradient(135deg, #FDF6F2 0%, #F6F9F6 100%);
+      border: 1.5px dashed var(--coral-500);
+      border-radius: 20px;
+      padding: 28px 24px;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .lock-banner h3 {
+      font-size: 19px;
+      color: var(--forest-900);
+      margin-bottom: 6px;
+    }
+
+    .lock-banner p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 16px;
+    }
+
+    /* Week Header Info */
+    .week-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .week-level-tag {
+      display: inline-block;
+      background: var(--mint-100);
+      color: var(--forest-800);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 4px 11px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+
+    .week-banner h2 {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--forest-900);
+    }
+
+    .week-banner p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Daily Checklist Items */
+    .day-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .day-item {
+      display: grid;
+      grid-template-columns: 28px 105px 1fr auto;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: var(--shell-bg);
+      border: 1px solid var(--border-soft);
+      transition: all 0.2s ease;
+    }
+
+    .day-item.completed {
+      background: #F0F9F3;
+      border-color: #B7E4C7;
+    }
+
+    .custom-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      border: 2px solid #9EB3A7;
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      transition: all 0.15s ease;
+    }
+
+    .day-item.completed .custom-check {
+      background: var(--mint-500);
+      border-color: var(--mint-500);
+    }
+
+    .day-badge {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--forest-900);
+      background: #FFFFFF;
+      padding: 5px 10px;
+      border-radius: 10px;
+      text-align: center;
+      border: 1px solid var(--border-soft);
+    }
+
+    .day-content h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .day-content p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .lab-link {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--forest-900);
+      background: #FFFFFF;
+      border: 1px solid var(--border-soft);
+      padding: 7px 12px;
+      border-radius: 999px;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .lab-link:hover {
+      background: var(--forest-900);
+      color: #FFFFFF;
+    }
+
+    /* Videos Grid inside Week */
+    .section-subhead {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--forest-900);
+      margin: 22px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .video-card {
+      background: var(--shell-bg);
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
+      padding: 14px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .video-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--mint-500);
+      box-shadow: 0 8px 20px rgba(22, 48, 38, 0.08);
+    }
+
+    .video-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #B91C1C;
+      background: #FEE2E2;
+      padding: 3px 9px;
+      border-radius: 999px;
+      width: fit-content;
+      margin-bottom: 8px;
+    }
+
+    .video-title {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--text-main);
+    }
+
+    .video-channel {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    /* Mini Quiz Box */
+    .quiz-box {
+      background: #F4F8F5;
+      border: 1px solid var(--border-soft);
+      border-radius: 20px;
+      padding: 18px;
+      margin-top: 20px;
+    }
+
+    .quiz-q {
+      margin-bottom: 14px;
+    }
+
+    .quiz-q p {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .quiz-opts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .quiz-opt {
+      padding: 7px 13px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      background: #FFFFFF;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .quiz-opt.correct {
+      background: var(--mint-500);
+      color: var(--forest-900);
+      border-color: var(--mint-500);
+    }
+
+    .quiz-opt.wrong {
+      background: #FEE2E2;
+      color: #991B1B;
+      border-color: #FCA5A5;
+    }
+
+    /* Weekly Deliverable Box */
+    .deliverable-box {
+      background: var(--forest-900);
+      color: #FFFFFF;
+      border-radius: 22px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .deliverable-box h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--mint-400);
+      margin-bottom: 6px;
+    }
+
+    .deliverable-box p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 14px;
+    }
+
+    .deliverable-controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .input-dark {
+      flex: 1;
+      min-width: 220px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 13px;
+    }
+
+    .input-dark::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 38, 30, 0.55);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #FFFFFF;
+      border-radius: 28px;
+      padding: 28px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-card h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--forest-900);
+      margin-bottom: 6px;
+    }
+
+    .modal-card p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .field-group {
+      margin-bottom: 14px;
+    }
+
+    .field-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: var(--text-main);
+    }
+
+    .input-light {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border-soft);
+      background: var(--shell-bg);
+      font-family: inherit;
+      font-size: 13.5px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .btn-ghost {
+      background: var(--shell-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--forest-900);
+      color: #FFFFFF;
+      padding: 13px 20px;
+      border-radius: 16px;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+      transform: translateY(120%);
+      opacity: 0;
+      transition: all 0.28s ease;
+      z-index: 200;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 300;
+    }
+
+    @media (max-width: 1080px) {
+      .top-row, .mid-row, .bottom-grid {
+        grid-template-columns: 1fr;
+      }
+      .videos-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 10px; }
+      .app-shell {
+        grid-template-columns: 1fr;
+        border-radius: 24px;
+      }
+      .side-rail {
+        flex-direction: row;
+        height: auto;
+        position: static;
+        padding: 12px 16px;
+      }
+      .nav-group {
+        flex-direction: row;
+        justify-content: center;
+      }
+      .day-item {
+        grid-template-columns: 28px 1fr;
+      }
+      .day-badge, .lab-link {
+        grid-column: 2;
+        width: fit-content;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="app-shell">
+    <!-- Left Vertical Navigation Rail -->
+    <aside class="side-rail">
+      <div class="brand-mark">IA</div>
+
+      <nav class="nav-group">
+        <button class="nav-btn active" onclick="scrollToSection('top-dashboard')" title="Visão Geral">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+          <span class="nav-tooltip">Visão Geral</span>
+        </button>
+
+        <button class="nav-btn" onclick="scrollToSection('curriculum-section')" title="Cronograma 6 Semanas">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span class="nav-tooltip">Trilha 6 Semanas</span>
+        </button>
+
+        <button class="nav-btn" onclick="openMentorModal()" title="Validação & Painel Mentor">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="nav-tooltip">Painel Mentor (Validar)</span>
+        </button>
+
+        <button class="nav-btn" onclick="openConfigModal()" title="WhatsApp & Google Sheets">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="nav-tooltip">WhatsApp & Sheets</span>
+        </button>
+      </nav>
+
+      <button class="nav-btn" onclick="openMentorModal()" title="Status de Acesso">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span class="nav-tooltip">Status de Liberação</span>
+      </button>
+    </aside>
+
+    <!-- Main Dashboard Content -->
+    <main class="main-area" id="top-dashboard">
+      <!-- Top Row -->
+      <section class="top-row">
+        <div class="hero-card">
+          <div class="hero-top">
+            <div>
+              <h1 class="hero-title">Aprender IA fica <span class="serif-accent">melhor</span> com direção</h1>
+              <p class="hero-sub">Trilha guiada da <strong>Tayna</strong> — do zero absoluto ao nível intermediário em 6 semanas, com 1h por dia (Seg a Sex), aulas práticas e desafios semanais.</p>
+            </div>
+            <div id="validation-badge" class="status-pill pending">
+              <span class="pulse-dot"></span>
+              <span id="validation-badge-text">Aguardando Validação</span>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <button id="hero-cta-btn" class="btn-coral" onclick="openMentorModal()">
+              <span>Validar & Liberar Estudos</span>
+              <span>→</span>
+            </button>
+            <div class="hero-meta-pills">
+              <span class="mini-chip">1h / dia</span>
+              <span class="mini-chip">Seg a Sex</span>
+              <span class="mini-chip" id="current-level-chip">Nível: Iniciante Zero</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Calendar Card -->
+        <div class="calendar-card">
+          <div class="cal-header">
+            <div>
+              <div class="cal-title" id="cal-week-label">Semana 1 • Fundamentos</div>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Rotina de 60 min/dia • Clique no dia</div>
+            </div>
+            <div class="cal-nav">
+              <button class="icon-circle-btn" onclick="changeWeek(-1)" title="Semana Anterior">‹</button>
+              <button class="icon-circle-btn" onclick="changeWeek(1)" title="Próxima Semana">›</button>
+            </div>
+          </div>
+
+          <div class="week-strip" id="calendar-strip">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Middle Bento Row -->
+      <section class="mid-row">
+        <!-- Squad Card -->
+        <div class="bento-card">
+          <div class="card-header">
+            <div class="card-title">Dupla de Estudos <span class="badge-mint">Ativa</span></div>
+          </div>
+          <div class="squad-grid">
+            <div class="person-box">
+              <div class="avatar-circle avatar-tayna">TY</div>
+              <div class="person-name">Tayna</div>
+              <div class="person-role">Aluna • Foco em IA</div>
+            </div>
+            <div class="person-box">
+              <div class="avatar-circle avatar-mentor">MV</div>
+              <div class="person-name">Matheus V.</div>
+              <div class="person-role">Mentor & Validador</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hours Card -->
+        <div class="bento-card">
+          <div class="card-header">
+            <div class="card-title">Tempo Acumulado</div>
+            <span style="font-size:12px; color:var(--text-muted); font-weight:700;">Meta: 30,0h</span>
+          </div>
+          <div class="big-metric" id="hours-display">00,0<span>h</span></div>
+          <div class="metric-footer">
+            <div>Ritmo Diário<strong>1,0h / dia</strong></div>
+            <div>Dias Ativos<strong>Seg – Sex</strong></div>
+            <div>Conclusão<strong id="pct-display">0%</strong></div>
+          </div>
+        </div>
+
+        <!-- Pillars Card -->
+        <div class="bento-card">
+          <div class="card-header">
+            <div class="card-title">Evolução por Pilar</div>
+            <span style="font-size:12px; color:var(--text-muted); font-weight:700;">3 Fases</span>
+          </div>
+          <div class="pillars-chart">
+            <div class="pillar-col">
+              <div class="pillar-track"><div class="pillar-fill" id="pillar-1" style="height:15%"></div></div>
+              <span class="pillar-label">Base & Prompts</span>
+            </div>
+            <div class="pillar-col">
+              <div class="pillar-track"><div class="pillar-fill" id="pillar-2" style="height:15%"></div></div>
+              <span class="pillar-label">Python & ML</span>
+            </div>
+            <div class="pillar-col">
+              <div class="pillar-track"><div class="pillar-fill" id="pillar-3" style="height:15%"></div></div>
+              <span class="pillar-label">APIs & RAG</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bottom Row: Statistics + Interactive Curriculum -->
+      <section class="bottom-grid" id="curriculum-section">
+        <!-- Left: Segmented Statistics -->
+        <div class="bento-card">
+          <div>
+            <div class="card-header">
+              <div class="card-title">Estatísticas da Trilha</div>
+              <span class="badge-mint">6 Semanas</span>
+            </div>
+            <div class="stats-number"><span id="days-done-num">00</span> <small>/ 30 dias concluídos</small></div>
+            <div class="tick-bar" id="tick-bar"></div>
+          </div>
+
+          <div class="sub-stat-grid">
+            <div class="sub-stat-box">
+              <div class="sub-stat-lbl">Semanas Validadas</div>
+              <div class="sub-stat-val" id="weeks-done-num">00 / 06</div>
+            </div>
+            <div class="sub-stat-box">
+              <div class="sub-stat-lbl">Tarefas Entregues</div>
+              <div class="sub-stat-val" id="tasks-done-num">00 / 06</div>
+            </div>
+          </div>
+
+          <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border-soft); display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; color:var(--text-muted); font-weight:600;">Conectar planilha ou WhatsApp</span>
+            <button class="btn-ghost" style="padding:7px 13px; font-size:12px;" onclick="openConfigModal()">Configurar</button>
+          </div>
+        </div>
+
+        <!-- Right: Curriculum Workspace -->
+        <div class="workspace-card">
+          <div class="week-tabs" id="week-tabs">
+            <!-- Rendered by JS -->
+          </div>
+
+          <div id="week-content-area">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Mentor Validation Modal -->
+  <div class="modal-backdrop" id="mentor-modal">
+    <div class="modal-card">
+      <h3>Painel de Validação do Mentor</h3>
+      <p>Valide o cronograma para liberar os estudos da Tayna ou ajuste o desbloqueio das semanas. (PIN padrão: <strong>2026</strong>)</p>
+
+      <div class="field-group">
+        <label>PIN do Mentor</label>
+        <input type="password" id="mentor-pin-input" class="input-light" placeholder="Digite 2026" />
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;">
+        <button class="btn-mint" style="justify-content:center;" onclick="validateAndUnlock(false)">Validar & Liberar Sem. 1</button>
+        <button class="btn-coral" style="justify-content:center;" onclick="validateAndUnlock(true)">Liberar Todas (Modo Livre)</button>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:18px; padding-top:14px; border-top:1px solid var(--border-soft);">
+        <button class="btn-ghost" style="color:#B91C1C; border-color:#FECACA;" onclick="resetAllProgress()">Resetar Tudo</button>
+        <button class="btn-ghost" onclick="closeModal('mentor-modal')">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Integrations Config Modal -->
+  <div class="modal-backdrop" id="config-modal">
+    <div class="modal-card">
+      <h3>Integração WhatsApp & Google Sheets</h3>
+      <p>Opcional: configure seu WhatsApp para receber as entregas semanais da Tayna com 1 clique e conecte uma planilha via Apps Script.</p>
+
+      <div class="field-group">
+        <label>WhatsApp do Mentor (com DDI + DDD, ex: 5581999999999)</label>
+        <input type="text" id="cfg-whatsapp" class="input-light" placeholder="55819..." />
+      </div>
+
+      <div class="field-group">
+        <label>URL do Web App (Google Apps Script - Opcional)</label>
+        <input type="url" id="cfg-sheets-url" class="input-light" placeholder="https://script.google.com/macros/s/.../exec" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-ghost" onclick="closeModal('config-modal')">Cancelar</button>
+        <button class="btn-mint" onclick="saveConfig()">Salvar Configurações</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const CURRICULUM = [
+      {
+        week: 1,
+        shortTitle: "Semana 1",
+        title: "Desmistificando a IA",
+        level: "Nível: Iniciante Zero",
+        goal: "Entender o que realmente é Inteligência Artificial, como modelos aprendem padrões e perder o medo dos termos técnicos.",
+        days: [
+          { day: "Segunda", topic: "O que é IA, Machine Learning e Deep Learning", task: "Assistir à aula introdutória e anotar com suas palavras a diferença entre IA tradicional e IA Generativa.", labLabel: "Abrir Gemini", labUrl: "https://gemini.google.com" },
+          { day: "Terça", topic: "Como uma IA aprende (Dados e Padrões)", task: "Treinar um modelo visual simples com a webcam no Google Teachable Machine (mão aberta vs. fechada).", labLabel: "Teachable Machine", labUrl: "https://teachablemachine.withgoogle.com/train/image" },
+          { day: "Quarta", topic: "Redes Neurais sem matemática pesada", task: "Assistir ao vídeo sobre Deep Learning e listar 3 exemplos de IA que você usa no celular todos os dias.", labLabel: "Ver Vídeo", labUrl: "https://www.youtube.com/watch?v=M8hoXE24PMo" },
+          { day: "Quinta", topic: "LLMs (Modelos de Linguagem) e Tokens", task: "Testar a mesma pergunta no Gemini e no ChatGPT comparando como o contexto muda a resposta.", labLabel: "Abrir ChatGPT", labUrl: "https://chatgpt.com" },
+          { day: "Sexta", topic: "Limitações, Alucinações e Ética", task: "Fazer perguntas capciosas para identificar quando a IA inventa fatos (alucinação) e checar fontes.", labLabel: "Abrir Gemini", labUrl: "https://gemini.google.com" }
+        ],
+        videos: [
+          { title: "O que é IA? Diferença entre IA, ML, Deep Learning e IA Generativa", channel: "Attekita Dev", url: "https://www.youtube.com/watch?v=rhkrBymAP6U" },
+          { title: "Qual a diferença entre IA, Machine Learning e Deep Learning", channel: "Bóson Treinamentos", url: "https://www.youtube.com/watch?v=wFYAV_Wk5bc" },
+          { title: "Você sabe o que é Deep Learning?", channel: "Curso em Vídeo", url: "https://www.youtube.com/watch?v=M8hoXE24PMo" }
+        ],
+        quiz: [
+          {
+            q: "1. O que acontece quando uma IA 'alucina'?",
+            options: ["Ela trava o computador", "Ela inventa uma informação falsa com tom convincente", "Ela apaga os dados de treino"],
+            answer: 1
+          },
+          {
+            q: "2. Qual é a relação correta entre os conceitos?",
+            options: ["Deep Learning fica dentro de Machine Learning, que fica dentro de IA", "São três tecnologias sem relação", "IA fica dentro de Deep Learning"],
+            answer: 0
+          }
+        ],
+        deliverable: "Criar um Mini Dicionário Ilustrado de IA (Notion, Google Docs ou Canva) explicando 6 termos (IA, Machine Learning, Deep Learning, LLM, Token e Alucinação) com analogias simples."
+      },
+      {
+        week: 2,
+        shortTitle: "Semana 2",
+        title: "Engenharia de Prompt na Prática",
+        level: "Nível: Iniciante Aplicado",
+        goal: "Dominar a comunicação estruturada com IAs generativas para estudar, resumir materiais e resolver tarefas reais.",
+        days: [
+          { day: "Segunda", topic: "Anatomia de um Bom Prompt", task: "Aplicar a fórmula Persona + Contexto + Tarefa + Formato em 3 pedidos diferentes.", labLabel: "Abrir Gemini", labUrl: "https://gemini.google.com" },
+          { day: "Terça", topic: "Técnicas Few-Shot e Chain-of-Thought", task: "Ensinar a IA a responder no estilo desejado dando 2 exemplos antes do pedido final.", labLabel: "Abrir Gemini", labUrl: "https://gemini.google.com" },
+          { day: "Quarta", topic: "Iteração e Refinamento de Respostas", task: "Transformar uma resposta genérica em uma tabela comparativa e um checklist prático em 3 rodadas.", labLabel: "Abrir ChatGPT", labUrl: "https://chatgpt.com" },
+          { day: "Quinta", topic: "IA Multimodal (Imagens, PDFs e Áudio)", task: "Enviar um PDF ou foto de anotação para a IA resumir e criar 5 perguntas de revisão.", labLabel: "Abrir Gemini", labUrl: "https://gemini.google.com" },
+          { day: "Sexta", topic: "Assistentes Personalizados (Gems / GPTs)", task: "Configurar um tutor de estudos personalizado com instruções fixas de comportamento.", labLabel: "Criar Gem", labUrl: "https://gemini.google.com" }
+        ],
+        videos: [
+          { title: "Como criar ÓTIMOS PROMPTS na prática com 5 TÉCNICAS", channel: "wakaro", url: "https://www.youtube.com/watch?v=xA7PdN_mLJ8" },
+          { title: "Engenharia De Prompt: 7 Passos Para O Prompt Perfeito", channel: "Bruno Picinini", url: "https://www.youtube.com/watch?v=oFGXr2pgKLY" },
+          { title: "Guia de prompts 2026: o que mudou no uso de ChatGPT, Gemini e Claude", channel: "InvestNews BR", url: "https://www.youtube.com/watch?v=G_dwSYEz2xE" }
+        ],
+        quiz: [
+          {
+            q: "1. Na técnica Few-Shot Prompting, o que você fornece para a IA?",
+            options: ["Apenas uma palavra-chave", "Alguns exemplos de entrada e saída esperada", "O código-fonte do servidor"],
+            answer: 1
+          },
+          {
+            q: "2. Qual estrutura deixa um prompt mais previsível e completo?",
+            options: ["Persona + Contexto + Tarefa + Formato", "Apenas pedir 'me ajude'", "Escrever tudo em letras maiúsculas"],
+            answer: 0
+          }
+        ],
+        deliverable: "Construir uma Biblioteca Pessoal com 5 Super-Prompts testados (Tutor de Estudos, Revisor de Textos, Planejador Semanal, Resumidor de PDFs e Gerador de Ideias) mostrando antes vs. depois."
+      },
+      {
+        week: 3,
+        shortTitle: "Semana 3",
+        title: "Lógica & Primeiros Passos em Python",
+        level: "Nível: Transição Técnica",
+        goal: "Perder o medo de código entendendo variáveis, decisões e repetições em Python diretamente no navegador.",
+        days: [
+          { day: "Segunda", topic: "Pensamento Computacional e Algoritmos", task: "Assistir à aula inicial do Guanabara e escrever o passo a passo lógico de uma rotina do dia.", labLabel: "Ver Aula 01", labUrl: "https://www.youtube.com/watch?v=S9uPNppGsGo" },
+          { day: "Terça", topic: "Primeiros Comandos no Google Colab", task: "Abrir o Google Colab (zero instalação) e rodar seus primeiros comandos print() e input().", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Quarta", topic: "Variáveis, Tipos de Dados e Operações", task: "Criar um script que pergunta nome, área de interesse e horas livres e exibe uma saudação.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Quinta", topic: "Estruturas Condicionais (if / else)", task: "Criar uma regra inteligente que recomenda estudar teoria ou prática conforme o tempo livre.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Sexta", topic: "Listas e Laços de Repetição (for)", task: "Guardar os tópicos de IA em uma lista Python e imprimir um checklist numerado usando for.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" }
+        ],
+        videos: [
+          { title: "Curso Python #01 - Seja um Programador", channel: "Curso em Vídeo", url: "https://www.youtube.com/watch?v=S9uPNppGsGo" },
+          { title: "Curso Python #04 - Primeiros comandos em Python3", channel: "Curso em Vídeo", url: "https://www.youtube.com/watch?v=31llNGKWDdo" },
+          { title: "Curso Python #10 - Condições (Parte 1)", channel: "Curso em Vídeo", url: "https://www.youtube.com/watch?v=K10u3XIf1-Q" }
+        ],
+        quiz: [
+          {
+            q: "1. Para que serve o comando input() em Python?",
+            options: ["Apagar variáveis da memória", "Ler uma informação digitada pelo usuário", "Criar um gráfico automático"],
+            answer: 1
+          },
+          {
+            q: "2. Qual estrutura usamos para tomar decisões ('se isso acontecer, faça aquilo')?",
+            options: ["print / len", "if / else", "import / from"],
+            answer: 1
+          }
+        ],
+        deliverable: "Desenvolver no Google Colab um Quiz Interativo de IA em Python com 5 perguntas, contagem de pontos usando if/else e mensagem final personalizada."
+      },
+      {
+        week: 4,
+        shortTitle: "Semana 4",
+        title: "Dados & Machine Learning na Nuvem",
+        level: "Nível: Intermediário Inicial",
+        goal: "Entender como planilhas viram combustível para modelos preditivos usando Pandas e Scikit-Learn.",
+        days: [
+          { day: "Segunda", topic: "Dominando Notebooks no Google Colab", task: "Organizar seções de texto (Markdown) e código no Colab e carregar uma tabela CSV.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Terça", topic: "Manipulação de Tabelas com Pandas", task: "Filtrar linhas, calcular médias e explorar colunas de uma base pública com Pandas.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Quarta", topic: "Visualização Exploratória de Dados", task: "Criar gráficos simples de barras e dispersão para enxergar padrões antes do treino.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Quinta", topic: "Treino vs. Teste em Machine Learning", task: "Dividir uma base de dados entre conjunto de treino e conjunto de teste.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Sexta", topic: "Primeiro Modelo com Scikit-Learn", task: "Treinar um classificador básico (dataset Iris ou Titanic) e medir a taxa de acerto.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" }
+        ],
+        videos: [
+          { title: "Como usar o Google COLAB para ANALISAR DADOS?", channel: "Programação Dinâmica", url: "https://www.youtube.com/watch?v=_mIwsA2ddSc" },
+          { title: "Te ensino TUDO sobre Pandas para análise de dados com Python", channel: "Asimov Academy", url: "https://www.youtube.com/watch?v=1JpYOqvDJNU" },
+          { title: "Primeiros passos com Scikit-Learn | Machine Learning #04", channel: "Programação Dinâmica", url: "https://www.youtube.com/watch?v=39HBlzFV9vk" }
+        ],
+        quiz: [
+          {
+            q: "1. Por que separamos os dados em 'Treino' e 'Teste'?",
+            options: ["Para avaliar se o modelo aprendeu de verdade com dados inéditos", "Porque o Python não aceita tabelas grandes", "Para deixar o gráfico colorido"],
+            answer: 0
+          },
+          {
+            q: "2. Qual biblioteca Python é padrão para manipular tabelas (DataFrames)?",
+            options: ["Pandas", "Turtle", "Random"],
+            answer: 0
+          }
+        ],
+        deliverable: "Criar um Notebook de Análise e Previsão no Google Colab respondendo 3 perguntas com Pandas e treinando 1 modelo Scikit-Learn fazendo previsões novas."
+      },
+      {
+        week: 5,
+        shortTitle: "Semana 5",
+        title: "Conectando IA ao Código via APIs",
+        level: "Nível: Intermediário Prático",
+        goal: "Sair da janela de chat comum e integrar modelos de IA dentro de scripts Python próprios via chave de API.",
+        days: [
+          { day: "Segunda", topic: "O que é uma API e formato JSON", task: "Entender o fluxo de requisição e resposta entre seu código Python e os servidores de IA.", labLabel: "Ver Guia API", labUrl: "https://www.youtube.com/watch?v=x_H2GgqjCZI" },
+          { day: "Terça", topic: "Gerando Chaves no Google AI Studio", task: "Criar uma chave gratuita no Google AI Studio e salvá-la com segurança nos Secrets do Colab.", labLabel: "Google AI Studio", labUrl: "https://aistudio.google.com" },
+          { day: "Quarta", topic: "Primeira Chamada de IA via Python", task: "Instalar o SDK da IA no Colab e enviar um prompt via código recebendo a resposta.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Quinta", topic: "Parâmetros (Temperatura e System Prompt)", task: "Testar temperature baixa (precisão) vs. alta (criatividade) e fixar regras de persona.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Sexta", topic: "Chatbot Interativo em Loop (while)", task: "Criar um loop de conversa contínua no terminal até o usuário digitar 'sair'.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" }
+        ],
+        videos: [
+          { title: "Aprenda APIs em 10 Minutos: Guia Rápido com Exemplos Práticos", channel: "Diego Napoli", url: "https://www.youtube.com/watch?v=x_H2GgqjCZI" },
+          { title: "Crie sua própria IA em Python (Passo a Passo para Iniciantes)", channel: "Leandro Hirt | Academify", url: "https://www.youtube.com/watch?v=YdvNAhO3d04" },
+          { title: "Como usar a API do ChatGPT com PYTHON na PRÁTICA!", channel: "Alura", url: "https://www.youtube.com/watch?v=VQZWtBW-Vbs" }
+        ],
+        quiz: [
+          {
+            q: "1. Por que nunca devemos colar a chave de API direto no código público?",
+            options: ["Porque o código fica lento", "Para evitar que outras pessoas usem sua cota ou conta", "Porque o Python não aceita letras"],
+            answer: 1
+          },
+          {
+            q: "2. O que o parâmetro 'temperature' controla em um modelo generativo?",
+            options: ["O grau de criatividade/aleatoriedade das respostas", "A temperatura do processador", "O idioma do teclado"],
+            answer: 0
+          }
+        ],
+        deliverable: "Programar um Assistente Especialista via API em Python (ex.: Corretor de Redação ou Tutor de Inglês) que conversa em loop seguindo regras fixas."
+      },
+      {
+        week: 6,
+        shortTitle: "Semana 6",
+        title: "RAG, Documentos & Agentes de IA",
+        level: "Nível: Intermediário Consolidado",
+        goal: "Construir sistemas capazes de consultar documentos reais sem alucinar e entender o funcionamento de Agentes.",
+        days: [
+          { day: "Segunda", topic: "O que é RAG (Retrieval-Augmented Generation)", task: "Entender como empresas conectam PDFs e bases próprias aos modelos sem retreinar tudo.", labLabel: "Ver Explicação", labUrl: "https://www.youtube.com/watch?v=CuPKOGdA46Q" },
+          { day: "Terça", topic: "Embeddings e Busca Semântica", task: "Visualizar como textos viram vetores numéricos para encontrar trechos por significado.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Quarta", topic: "Preparação de Documentos (Chunking)", task: "Carregar um PDF real no Python e dividi-lo em blocos menores de texto organizados.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Quinta", topic: "Pipeline Completo: Busca + Resposta", task: "Conectar a busca dos trechos relevantes do PDF com a geração de resposta fundamentada.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" },
+          { day: "Sexta", topic: "Introdução a Agentes de IA & Projeto Final", task: "Entender como Agentes usam ferramentas (tools) e finalizar seu chatbot de PDF.", labLabel: "Google Colab", labUrl: "https://colab.research.google.com" }
+        ],
+        videos: [
+          { title: "RAG (Retrieval-Augmented Generation) // Dicionário do Programador", channel: "Código Fonte TV", url: "https://www.youtube.com/watch?v=CuPKOGdA46Q" },
+          { title: "RAG Explicado: Como Dar Conhecimento aos Seus Agentes de IA", channel: "Attekita Dev", url: "https://www.youtube.com/watch?v=SWXa7z_64-g" },
+          { title: "Construindo um RAG próprio do ZERO", channel: "Augusto Galego", url: "https://www.youtube.com/watch?v=8juRvzZg_AI" }
+        ],
+        quiz: [
+          {
+            q: "1. Qual é a principal vantagem da arquitetura RAG?",
+            options: ["Fazer a IA responder com base em documentos específicos e atualizados", "Deixar a tela em modo escuro", "Substituir o Python por HTML"],
+            answer: 0
+          },
+          {
+            q: "2. O que diferencia um Agente de IA de um chatbot comum?",
+            options: ["Agentes podem decidir e executar ações usando ferramentas externas", "Agentes não usam modelos de linguagem", "Agentes só funcionam sem internet"],
+            answer: 0
+          }
+        ],
+        deliverable: "Projeto Final: Chatbot 'Converse com seu PDF' no Google Colab que responde perguntas exclusivamente com base em um documento escolhido por você."
+      }
+    ];
+
+    const STORAGE_KEY = "tayna_ia_trilha_v1";
+
+    let state = loadState();
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {}
+      }
+      return {
+        validated: false,
+        freeMode: false,
+        unlockedUpTo: 0,
+        activeWeek: 1,
+        activeDayIdx: 0,
+        completedDays: {},      // "w1-d0": true
+        completedWeeks: {},     // "w1": true
+        deliverableLinks: {},   // "w1": "https://..."
+        quizAnswers: {},        // "w1-q0": 1
+        whatsapp: "",
+        sheetsUrl: ""
+      };
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      syncToSheets();
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(() => el.classList.remove("show"), 3200);
+    }
+
+    function scrollToSection(id) {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    }
+
+    function openMentorModal() {
+      document.getElementById("mentor-pin-input").value = "";
+      document.getElementById("mentor-modal").classList.add("open");
+    }
+
+    function openConfigModal() {
+      document.getElementById("cfg-whatsapp").value = state.whatsapp || "";
+      document.getElementById("cfg-sheets-url").value = state.sheetsUrl || "";
+      document.getElementById("config-modal").classList.add("open");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+    }
+
+    function validateAndUnlock(unlockAll) {
+      const pin = document.getElementById("mentor-pin-input").value.trim();
+      if (pin !== "2026") {
+        showToast("PIN incorreto. Use 2026 para validar.");
+        return;
+      }
+      state.validated = true;
+      state.freeMode = unlockAll;
+      state.unlockedUpTo = unlockAll ? 6 : Math.max(state.unlockedUpTo, 1);
+      saveState();
+      closeModal("mentor-modal");
+      renderAll();
+      triggerConfetti();
+      showToast(unlockAll ? "Todas as 6 semanas foram liberadas!" : "Cronograma validado! Semana 1 liberada para a Tayna.");
+    }
+
+    function resetAllProgress() {
+      const pin = document.getElementById("mentor-pin-input").value.trim();
+      if (pin !== "2026") {
+        showToast("Digite o PIN 2026 antes de resetar.");
+        return;
+      }
+      localStorage.removeItem(STORAGE_KEY);
+      state = loadState();
+      closeModal("mentor-modal");
+      renderAll();
+      showToast("Progresso resetado para o estado inicial.");
+    }
+
+    function saveConfig() {
+      state.whatsapp = document.getElementById("cfg-whatsapp").value.replace(/\D/g, "");
+      state.sheetsUrl = document.getElementById("cfg-sheets-url").value.trim();
+      saveState();
+      closeModal("config-modal");
+      showToast("Configurações salvas com sucesso!");
+    }
+
+    function syncToSheets() {
+      if (!state.sheetsUrl) return;
+      const doneCount = Object.values(state.completedDays).filter(Boolean).length;
+      fetch(state.sheetsUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          aluna: "Tayna",
+          validado: state.validated,
+          diasConcluidos: doneCount,
+          horas: doneCount,
+          semanasConcluidas: Object.keys(state.completedWeeks).filter(k => state.completedWeeks[k]),
+          entregas: state.deliverableLinks,
+          atualizadoEm: new Date().toISOString()
+        })
+      }).catch(() => {});
+    }
+
+    function isWeekUnlocked(weekNum) {
+      if (!state.validated) return false;
+      if (state.freeMode) return true;
+      return weekNum <= state.unlockedUpTo;
+    }
+
+    function changeWeek(delta) {
+      const next = Math.min(6, Math.max(1, state.activeWeek + delta));
+      state.activeWeek = next;
+      state.activeDayIdx = 0;
+      saveState();
+      renderAll();
+    }
+
+    function selectWeek(w) {
+      state.activeWeek = w;
+      state.activeDayIdx = 0;
+      saveState();
+      renderAll();
+    }
+
+    function toggleDay(w, dIdx) {
+      if (!isWeekUnlocked(w)) {
+        showToast("Valide o cronograma com o mentor para marcar os dias.");
+        return;
+      }
+      const key = `w${w}-d${dIdx}`;
+      state.completedDays[key] = !state.completedDays[key];
+      state.activeDayIdx = dIdx;
+      saveState();
+      renderAll();
+      if (state.completedDays[key]) {
+        showToast(`+1,0h registrada! ${CURRICULUM[w - 1].days[dIdx].day} concluída.`);
+      }
+    }
+
+    function answerQuiz(w, qIdx, optIdx, correctIdx) {
+      if (!isWeekUnlocked(w)) return;
+      state.quizAnswers[`w${w}-q${qIdx}`] = optIdx;
+      saveState();
+      renderWeekWorkspace();
+      if (optIdx === correctIdx) {
+        showToast("Resposta certa! Excelente fixação.");
+      } else {
+        showToast("Quase lá! Tente outra alternativa.");
+      }
+    }
+
+    function updateDeliverableLink(w, val) {
+      state.deliverableLinks[`w${w}`] = val;
+      saveState();
+    }
+
+    function completeWeek(w) {
+      if (!isWeekUnlocked(w)) return;
+      // Ensure all 5 days are marked
+      for (let i = 0; i < 5; i++) {
+        state.completedDays[`w${w}-d${i}`] = true;
+      }
+      state.completedWeeks[`w${w}`] = true;
+      if (w < 6) {
+        state.unlockedUpTo = Math.max(state.unlockedUpTo, w + 1);
+      }
+      saveState();
+      renderAll();
+      triggerConfetti();
+      showToast(w < 6 ? `Semana ${w} concluída! Semana ${w + 1} desbloqueada!` : "Parabéns, Tayna! Você concluiu toda a trilha até o nível intermediário!");
+    }
+
+    function sendWhatsApp(w) {
+      const weekObj = CURRICULUM[w - 1];
+      const link = state.deliverableLinks[`w${w}`] || "(link ainda não colado)";
+      const doneDays = [0,1,2,3,4].filter(i => state.completedDays[`w${w}-d${i}`]).length;
+      const text = encodeURIComponent(
+        `Oi! Concluí a *${weekObj.shortTitle} (${weekObj.title})* da minha Trilha de IA!\n` +
+        `• Progresso da semana: ${doneDays}/5 dias (1h/dia)\n` +
+        `• Entrega semanal: ${link}\n` +
+        `Pode validar meu avanço?`
+      );
+      const base = state.whatsapp ? `https://wa.me/${state.whatsapp}?text=${text}` : `https://api.whatsapp.com/send?text=${text}`;
+      window.open(base, "_blank");
+    }
+
+    function renderStats() {
+      const totalDaysDone = Object.values(state.completedDays).filter(Boolean).length;
+      const weeksDone = Object.values(state.completedWeeks).filter(Boolean).length;
+      const tasksDone = Object.keys(state.deliverableLinks).filter(k => (state.deliverableLinks[k] || "").trim().length > 3 || state.completedWeeks[k]).length;
+
+      // Hours display (00,0h)
+      const formattedHours = String(totalDaysDone).padStart(2, "0") + ",0";
+      document.getElementById("hours-display").innerHTML = `${formattedHours}<span>h</span>`;
+      document.getElementById("pct-display").textContent = `${Math.round((totalDaysDone / 30) * 100)}%`;
+
+      // Days done & 30 segmented ticks
+      document.getElementById("days-done-num").textContent = String(totalDaysDone).padStart(2, "0");
+      document.getElementById("weeks-done-num").textContent = `${String(weeksDone).padStart(2, "0")} / 06`;
+      document.getElementById("tasks-done-num").textContent = `${String(tasksDone).padStart(2, "0")} / 06`;
+
+      const tickBar = document.getElementById("tick-bar");
+      tickBar.innerHTML = "";
+      for (let i = 0; i < 30; i++) {
+        const div = document.createElement("div");
+        div.className = "tick" + (i < totalDaysDone ? " filled" : "");
+        tickBar.appendChild(div);
+      }
+
+      // Pillars (Weeks 1-2, 3-4, 5-6 -> 10 days each)
+      const countRange = (wStart, wEnd) => {
+        let c = 0;
+        for (let w = wStart; w <= wEnd; w++) {
+          for (let d = 0; d < 5; d++) {
+            if (state.completedDays[`w${w}-d${d}`]) c++;
+          }
+        }
+        return Math.max(14, Math.round((c / 10) * 100));
+      };
+      document.getElementById("pillar-1").style.height = countRange(1, 2) + "%";
+      document.getElementById("pillar-2").style.height = countRange(3, 4) + "%";
+      document.getElementById("pillar-3").style.height = countRange(5, 6) + "%";
+
+      // Validation Badge & Hero Button
+      const badge = document.getElementById("validation-badge");
+      const badgeText = document.getElementById("validation-badge-text");
+      const ctaBtn = document.getElementById("hero-cta-btn");
+      const levelChip = document.getElementById("current-level-chip");
+
+      if (state.validated) {
+        badge.className = "status-pill approved";
+        badgeText.textContent = "Validado • Liberado para Estudos";
+        ctaBtn.className = "btn-mint";
+        ctaBtn.innerHTML = `<span>Continuar Semana ${state.activeWeek}</span><span>→</span>`;
+        ctaBtn.onclick = () => scrollToSection("curriculum-section");
+      } else {
+        badge.className = "status-pill pending";
+        badgeText.textContent = "Aguardando Validação";
+        ctaBtn.className = "btn-coral";
+        ctaBtn.innerHTML = `<span>Validar & Liberar Estudos</span><span>→</span>`;
+        ctaBtn.onclick = openMentorModal;
+      }
+
+      levelChip.textContent = CURRICULUM[state.activeWeek - 1].level;
+    }
+
+    function renderCalendar() {
+      const w = state.activeWeek;
+      const weekObj = CURRICULUM[w - 1];
+      document.getElementById("cal-week-label").textContent = `${weekObj.shortTitle} • ${weekObj.title}`;
+
+      const strip = document.getElementById("calendar-strip");
+      const shortNames = ["Seg", "Ter", "Qua", "Qui", "Sex"];
+      strip.innerHTML = shortNames.map((name, idx) => {
+        const isDone = !!state.completedDays[`w${w}-d${idx}`];
+        const isActive = state.activeDayIdx === idx;
+        return `
+          <div class="day-pill ${isActive ? "active" : ""} ${isDone ? "done" : ""}" onclick="state.activeDayIdx=${idx}; saveState(); renderCalendar();">
+            <div class="d-name">${name}</div>
+            <div class="d-num">D${idx + 1}</div>
+            <div class="d-dot"></div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderWeekTabs() {
+      const tabsEl = document.getElementById("week-tabs");
+      tabsEl.innerHTML = CURRICULUM.map(item => {
+        const unlocked = isWeekUnlocked(item.week);
+        const done = !!state.completedWeeks[`w${item.week}`];
+        const active = state.activeWeek === item.week;
+        const icon = done ? "✓" : (unlocked ? "•" : "🔒");
+        return `
+          <button class="week-tab ${active ? "active" : ""} ${!unlocked ? "locked" : ""}" onclick="selectWeek(${item.week})">
+            <span>${icon}</span>
+            <span>${item.shortTitle}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function renderWeekWorkspace() {
+      const w = state.activeWeek;
+      const weekObj = CURRICULUM[w - 1];
+      const unlocked = isWeekUnlocked(w);
+      const area = document.getElementById("week-content-area");
+
+      let lockHtml = "";
+      if (!state.validated) {
+        lockHtml = `
+          <div class="lock-banner">
+            <h3>Cronograma aguardando validação do mentor</h3>
+            <p>Clique abaixo para inserir o PIN do mentor (<strong>2026</strong>) e liberar imediatamente a Semana 1 para a Tayna iniciar os estudos.</p>
+            <button class="btn-coral" onclick="openMentorModal()">Validar & Liberar Estudos Agora</button>
+          </div>
+        `;
+      } else if (!unlocked) {
+        lockHtml = `
+          <div class="lock-banner">
+            <h3>${weekObj.shortTitle} bloqueada temporariamente</h3>
+            <p>Conclua a Semana ${w - 1} (ou libere no Painel Mentor) para avançar para este módulo.</p>
+            <button class="btn-mint" onclick="selectWeek(${w - 1})">Voltar para Semana ${w - 1}</button>
+          </div>
+        `;
+      }
+
+      const daysHtml = weekObj.days.map((d, idx) => {
+        const isDone = !!state.completedDays[`w${w}-d${idx}`];
+        return `
+          <div class="day-item ${isDone ? "completed" : ""}">
+            <button class="custom-check" onclick="toggleDay(${w}, ${idx})" title="Marcar dia concluído">${isDone ? "✓" : ""}</button>
+            <div class="day-badge">${d.day} • 1h</div>
+            <div class="day-content">
+              <h4>${d.topic}</h4>
+              <p>${d.task}</p>
+            </div>
+            <a class="lab-link" href="${d.labUrl}" target="_blank" rel="noopener noreferrer">${d.labLabel} ↗</a>
+          </div>
+        `;
+      }).join("");
+
+      const videosHtml = weekObj.videos.map(v => `
+        <a class="video-card" href="${v.url}" target="_blank" rel="noopener noreferrer">
+          <div>
+            <span class="video-tag">▶ Vídeo Exemplo</span>
+            <div class="video-title">${v.title}</div>
+          </div>
+          <div class="video-channel">${v.channel} • Assistir ↗</div>
+        </a>
+      `).join("");
+
+      const quizHtml = weekObj.quiz.map((qObj, qIdx) => {
+        const chosen = state.quizAnswers[`w${w}-q${qIdx}`];
+        const optsHtml = qObj.options.map((opt, oIdx) => {
+          let cls = "quiz-opt";
+          if (chosen === oIdx) {
+            cls += (oIdx === qObj.answer) ? " correct" : " wrong";
+          }
+          return `<button class="${cls}" onclick="answerQuiz(${w}, ${qIdx}, ${oIdx}, ${qObj.answer})">${opt}</button>`;
+        }).join("");
+        return `
+          <div class="quiz-q">
+            <p>${qObj.q}</p>
+            <div class="quiz-opts">${optsHtml}</div>
+          </div>
+        `;
+      }).join("");
+
+      const savedLink = state.deliverableLinks[`w${w}`] || "";
+      const weekDone = !!state.completedWeeks[`w${w}`];
+
+      area.innerHTML = `
+        ${lockHtml}
+        <div style="${!unlocked ? "opacity:0.55; pointer-events:none;" : ""}">
+          <div class="week-banner">
+            <div>
+              <span class="week-level-tag">${weekObj.level}</span>
+              <h2>${weekObj.shortTitle} — ${weekObj.title}</h2>
+              <p>${weekObj.goal}</p>
+            </div>
+            <span class="badge-mint">${[0,1,2,3,4].filter(i => state.completedDays[`w${w}-d${i}`]).length}/5 dias concluídos</span>
+          </div>
+
+          <div class="day-list">${daysHtml}</div>
+
+          <div class="section-subhead">Aulas em Vídeo Selecionadas</div>
+          <div class="videos-grid">${videosHtml}</div>
+
+          <div class="quiz-box">
+            <div class="section-subhead" style="margin-top:0;">Mini Quiz de Fixação</div>
+            ${quizHtml}
+          </div>
+
+          <div class="deliverable-box">
+            <h4>Tarefa Semanal (Entrega de Sexta-feira)</h4>
+            <p>${weekObj.deliverable}</p>
+            <div class="deliverable-controls">
+              <input
+                type="text"
+                class="input-dark"
+                placeholder="Cole aqui o link do Google Colab, Docs ou Notion..."
+                value="${savedLink.replace(/"/g, "&quot;")}"
+                oninput="updateDeliverableLink(${w}, this.value)"
+              />
+              <button class="btn-ghost" style="background:rgba(255,255,255,0.12); color:#fff; border-color:rgba(255,255,255,0.2);" onclick="sendWhatsApp(${w})">
+                Enviar no WhatsApp
+              </button>
+              <button class="btn-mint" onclick="completeWeek(${w})">
+                ${weekDone ? "Semana Concluída ✓" : `Concluir & Liberar Sem. ${Math.min(6, w + 1)}`}
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAll() {
+      renderStats();
+      renderCalendar();
+      renderWeekTabs();
+      renderWeekWorkspace();
+    }
+
+    /* Lightweight Confetti Celebration */
+    function triggerConfetti() {
+      const canvas = document.getElementById("confetti-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const colors = ["#52B788", "#F29368", "#163026", "#95D5B2", "#FFD166"];
+      const pieces = Array.from({ length: 90 }, () => ({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * 200,
+        w: 8 + Math.random() * 6,
+        h: 5 + Math.random() * 5,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        vy: 3 + Math.random() * 4,
+        vx: -2 + Math.random() * 4,
+        rot: Math.random() * 360
+      }));
+
+      let frames = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += 4;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rot * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+          ctx.restore();
+        });
+        frames++;
+        if (frames < 130) {
+          requestAnimationFrame(draw);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+      draw();
+    }
+
+    renderAll();
+  </script>
+</body>
+</html>
